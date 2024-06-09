@@ -56,7 +56,7 @@ export default function FlashLoan() {
         <CardContent>
           <ul>
             <CardDescription>
-              1- First Request a flashLoan from Aave of Token0.
+              1- First Request a flashLoan from Balancer of Token0.
             </CardDescription>
             <CardDescription>
               2- Swap from Token0 to Token1 on SushiSwap.

@@ -2,7 +2,7 @@
 import { ethers } from "ethers";
 
 const abi = [
-  "function requestFlashLoan(address _token, uint256 _amount, address _token0, address _token1) public",
+  "function makeFlashLoan(address token0, uint256[] memory amounts0, address[] memory tokens1) external",
   "function owner() view returns (address)",
   "function withdraw(address _tokenAddress, address _to, uint256 _amount) external",
 ];
@@ -26,8 +26,7 @@ const ERC20_ABI = [
   "event Approval(address indexed owner, address indexed spender, uint256 value)",
 ];
 
-//const contractAddress = "0x51D7D844864B8be49c00b193CaFf42521452fEA0";
-const contractAddress = "0xCece18d540D569458ebFEd334156e4d7803a685C";
+const contractAddress = "0x26c93490449e3578E960854E3342D759c6c75C02";
 
 const network = "matic";
 const alchemyApiKey = "Fkhrqq6FnqtaSk2RsFO-J432v1VFl4Px";
@@ -86,16 +85,10 @@ export async function fArb(DATA: any) {
 
     const decimals = await coin.decimals();
     const amountToSend = ethers.parseUnits(amount, decimals);
-    const token = token0;
 
     try {
-      // Call the requestFlashLoan function
-      const tx = await contract.requestFlashLoan(
-        token,
-        amountToSend,
-        token0,
-        token1
-      );
+      // Call the makeFlashLoan function
+      const tx = await contract.makeFlashLoan(token0, [amountToSend], [token1]);
 
       // Wait for the transaction to be mined
       const receipt = await tx.wait();
@@ -122,13 +115,13 @@ export async function fArb(DATA: any) {
           expected * 10 ** -decimals;
       }
       console.log(reason);*/
-      return JSON.stringify({ success: false, error: error.reason });
+      return JSON.stringify({ success: false, error: error.reason || "error" });
     }
   } catch (error: any) {
     console.log("error is ", error);
     return JSON.stringify({
       success: false,
-      error: error.reason ? error.reason : "error",
+      error: "error",
     });
   }
 }
